@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: Build and Deploy to GKE
 
 on:
   push:
@@ -6,12 +6,8 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
-    env:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
     steps:
       - name: Checkout repository
@@ -20,50 +16,33 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ env.DOCKERHUB_USERNAME }}
-          password: ${{ env.DOCKERHUB_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and push backend image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend
-          push: true
-          tags: ${{ env.DOCKERHUB_USERNAME }}/backend:latest
+      - name: Build and push backend
+        run: |
+          docker build -t yourdockerhub/backend:latest ./backend
+          docker push yourdockerhub/backend:latest
 
-      - name: Build and push frontend image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          push: true
-          tags: ${{ env.DOCKERHUB_USERNAME }}/frontend:latest
+      - name: Build and push frontend
+        run: |
+          docker build -t yourdockerhub/frontend:latest ./frontend
+          docker push yourdockerhub/frontend:latest
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GCP_DEPLOY_SA }}
 
-      - name: Configure Docker
-        run: |
-          gcloud auth configure-docker ${{ secrets.GCP_LOCATION }}-docker.pkg.dev
-
-      - name: Build and Push Docker image
-        run: |
-          IMAGE_URI="${{ secrets.GCP_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-images/my-project-${{ env.MY_PROJECT_ENV }}:latest"
-          docker build -t "$IMAGE_URI" .
-          docker push "$IMAGE_URI"
-
       - name: Get GKE credentials
         run: |
-          gcloud container clusters get-credentials $CLUSTER_NAME \
-            --zone $CLUSTER_LOCATION \
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} \
+            --zone ${{ secrets.GCP_LOCATION }} \
             --project ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Update image in deploy.yaml
-        run: |
-          sed -i "s|image: .*|image: $IMAGE_URI|g" deploy.yaml
-
-      - name: Apply Kubernetes manifests
+      - name: Deploy to GKE
         run: |
           kubectl apply -f deploy.yaml
+          # Wait for deployments to complete
           kubectl rollout status deployment/backend
           kubectl rollout status deployment/frontend
