@@ -96,7 +96,7 @@ spec:
         - name: backend
           image: isak0016/backend:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           env:
             - name: DB_HOST
               value: "postgres-service"
@@ -130,8 +130,8 @@ spec:
   selector:
     app: backend
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 80
+      targetPort: 80
 ---
 #frontend
 apiVersion: apps/v1
@@ -170,5 +170,5 @@ spec:
     app: frontend
   ports:
     - port: 8080
-      targetPort: 80
+      targetPort: 8080
   type: LoadBalancer
