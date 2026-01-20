@@ -36,3 +36,34 @@ jobs:
           context: ./frontend
           push: true
           tags: ${{ env.DOCKERHUB_USERNAME }}/frontend:latest
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_DEPLOY_SA }}
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker ${{ secrets.GCP_LOCATION }}-docker.pkg.dev
+
+      - name: Build and Push Docker image
+        run: |
+          IMAGE_URI="${{ secrets.GCP_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-images/my-project-${{ env.MY_PROJECT_ENV }}:latest"
+          docker build -t "$IMAGE_URI" .
+          docker push "$IMAGE_URI"
+
+      - name: Get GKE credentials
+        run: |
+          gcloud container clusters get-credentials $CLUSTER_NAME \
+            --zone $CLUSTER_LOCATION \
+            --project ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Update image in deploy.yaml
+        run: |
+          sed -i "s|image: .*|image: $IMAGE_URI|g" deploy.yaml
+
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f deploy.yaml
+          kubectl rollout status deployment/backend
+          kubectl rollout status deployment/frontend
