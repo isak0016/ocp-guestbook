@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -30,6 +31,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
+  namespace: default
 spec:
   selector:
     app: postgres
@@ -42,6 +44,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -62,6 +65,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-service
+  namespace: default
 spec:
   selector:
     app: redis
@@ -74,6 +78,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: default
 spec:
   replicas: 2
   selector:
@@ -93,7 +98,7 @@ spec:
         - name: PORT
           value: "8080"
         - name: DB_HOST
-          value: "postgres-service"
+          value: "postgres-service.default.svc.cluster.local"
         - name: DB_PORT
           value: "5432"
         - name: DB_USER
@@ -113,6 +118,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
+  namespace: default
 spec:
   selector:
     app: backend
@@ -125,6 +131,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  namespace: default
 spec:
   replicas: 2
   selector:
@@ -145,6 +152,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
+  namespace: default
 spec:
   selector:
     app: frontend
