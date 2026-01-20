@@ -86,7 +86,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: yourdockerhub/backend:latest
+        image: isak0016/backend:latest
         ports:
         - containerPort: 8080
         env:
@@ -137,7 +137,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: yourdockerhub/frontend:latest
+        image: isak0016/frontend:latest
         ports:
         - containerPort: 8080
 ---
