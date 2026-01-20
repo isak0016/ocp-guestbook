@@ -1,6 +1,7 @@
 # OpenShift: Distribuerad Gästbok med cache
 
 I denna labb ska ni bygga och deploya en modern, cloud-native applikation på OpenShift. Applikationen är en gästbok som demonstrerar:
+:)
 
 - Multi-tier arkitektur
 - Containerisering med multi-stage builds
@@ -22,9 +23,9 @@ Internet
                                             [Redis]   [PostgreSQL]
 ```
 
-
 Den färdiga applikationen ser ut så här: [screencast.com](https://app.screencast.com/x8uWhUNAMZNQB)
 w
+
 ## Container images
 
 - registry.access.redhat.com/ubi10/go-toolset:10.0
@@ -85,7 +86,7 @@ $ curl localhost:8080/health
 $ curl localhost:8080/api/entries
 ```
 
-- Skapa ett nytt inlägg. `name` är namnet på den som skrivit inlägget och `message` är inlägget. I exemplet nedanför skriver Jonas meddelandet *Jonas testar API!*
+- Skapa ett nytt inlägg. `name` är namnet på den som skrivit inlägget och `message` är inlägget. I exemplet nedanför skriver Jonas meddelandet _Jonas testar API!_
 
 ```sh
 $ curl -X POST localhost:8080/api/entries \
@@ -101,8 +102,8 @@ $ curl localhost:8080/api/stats
 
 ## Frontend
 
-För att nginx på frontend skall kunna hitta backend måste vi ange att den skall använda 
-OpenShift-klustrets DNS för namnuppslag. Då räcker det med att vår service heter `backend` 
+För att nginx på frontend skall kunna hitta backend måste vi ange att den skall använda
+OpenShift-klustrets DNS för namnuppslag. Då räcker det med att vår service heter `backend`
 och ligger i samma project som vi har frontend.
 
 ```nginx file=nginx.conf
@@ -127,8 +128,8 @@ Hela `nginx.conf`-filen finns här i repot.
 
 ## Redis
 
-- Sätt `REDIS_PASSWORD` till det lösenord du vill använda. Utan detta kommer inte backend kunna 
-kommunicera med Redis!
+- Sätt `REDIS_PASSWORD` till det lösenord du vill använda. Utan detta kommer inte backend kunna
+  kommunicera med Redis!
 - `/var/lib/redis/data` är katalogen där Redis sparar sin data.
 
 ## Checklist
@@ -152,4 +153,3 @@ kommunicera med Redis!
 5. Vad är skillnaden mellan ClusterIP, NodePort och LoadBalancer?
 6. Varför bör känsliga data ligga i Secrets istället för ConfigMaps?
 7. Hur kan vi implementera horizontal pod autoscaling?
-
