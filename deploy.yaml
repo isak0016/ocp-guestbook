@@ -29,7 +29,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-service
+  name: postgres-service1
 spec:
   selector:
     app: postgres
@@ -91,7 +91,7 @@ spec:
         - containerPort: 8080
         env:
           - name: DB_HOST
-            value: "postgres-service.default.svc.cluster.local"
+            value: "postgres-service1"
           - name: DB_PORT
             value: "5432"
           - name: DB_USER
