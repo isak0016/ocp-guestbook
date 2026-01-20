@@ -21,13 +21,13 @@ jobs:
 
       - name: Build and push backend
         run: |
-          docker build -t yourdockerhub/backend:latest ./backend
-          docker push yourdockerhub/backend:latest
+          docker build -t isak0016/backend:latest ./backend
+          docker push isak0016/backend:latest
 
       - name: Build and push frontend
         run: |
-          docker build -t yourdockerhub/frontend:latest ./frontend
-          docker push yourdockerhub/frontend:latest
+          docker build -t isak0016/frontend:latest ./frontend
+          docker push isak0016/frontend:latest
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v1
