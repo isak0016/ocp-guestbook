@@ -99,21 +99,21 @@ spec:
             - containerPort: 80
           env:
             - name: DB_HOST
-              value: "postgres-service"
+              value: "localhost"
             - name: DB_PORT
               value: "5432"
             - name: DB_USER
               value: "guestbook"
             - name: DB_PASSWORD
-              value: "password"
+              value: "dbpassword"
             - name: DB_NAME
               value: "guestbook"
             - name: REDIS_HOST
-              value: "redis-service"
+              value: "localhost"
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_PASSWORD
-              value: ""
+              value: "redispassword"
           resources:
             requests:
               cpu: "100m"
