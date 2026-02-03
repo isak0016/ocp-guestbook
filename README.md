@@ -9,7 +9,6 @@ I denna labb ska ni bygga och deploya en modern, cloud-native applikation på Op
 - Caching strategies
 - Persistent storage
 - External routing
-  :)
 
 ## Arkitektur
 
